@@ -34,7 +34,7 @@ use yii\widgets\ActiveForm;
 //            'data' => isset($userProfileModel->country_id) ? City::getCityMapArray($userProfileModel->country_id) : [],
 //            'options' => $select2Options,
 //    ]); ?>
-    <?= $form->field($model, 'hash_password')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'hash_password')->passwordInput(['maxlength' => true]) ?>
     <?= $form->field($userProfileModel, 'phone')->textInput(['maxlength' => true]) ?>
     <?= $form->field($userProfileModel, 'avatar')->textInput(['maxlength' => true]) ?>
     <?= $form->field($userProfileModel, 'bio')->textInput(['maxlength' => true]) ?>

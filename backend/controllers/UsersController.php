@@ -88,7 +88,7 @@ class UsersController extends Controller
             if ($valid) {
                 $transaction = Yii::$app->db->beginTransaction();
                 try {
-                    if (!empty($model->password)) {
+                    if (!empty($model->hash_password)) {
                         $model->setPassword($model->password);
                     }
                     $model->generateAuthKey();
@@ -127,10 +127,6 @@ class UsersController extends Controller
 
                 }
             }else{
-                var_dump($model->getErrors());
-                var_dump($userProfileModel->getErrors());
-                var_dump($userSettingsModel->getErrors());
-                die();
                 Yii::$app->session->setFlash('error', 'Something went wrong while creating user.' );
                 return $this->render('create', [
                     'model' => $model,
@@ -159,13 +155,68 @@ class UsersController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        if (isset($model))
+        {
+            $userProfileModel = $model->userProfile ?? new UserProfile();
+            $userSettingsModel = $model->userSettings ?? new UserSettings();
+        }
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($this->request->isPost) {
+            $model->load($this->request->post());
+            $userProfileModel->load($this->request->post());
+            $userSettingsModel->load($this->request->post());
+            $valid= $model->validate();
+            $valid= $userProfileModel->validate() && $valid;
+            $valid= $userSettingsModel->validate() && $valid;
+            if ($valid) {
+                $transaction = Yii::$app->db->beginTransaction();
+                try {
+                    if (!empty($model->hash_password)) {
+                        $model->setPassword($model->password);
+                    }
+                    if (!$model->save(false)) {
+                        var_dump($model->getErrors());
+                        die();
+                    }
+                    if (isset($model->id))
+                    {
+                        $userProfileModel->user_id = $model->id;
+                        if (!$userProfileModel->save(false)) {
+                            var_dump($userProfileModel->getErrors());
+                            die();
+                        }
+                        $userSettingsModel->user_id = $model->id;
+                        if (!$userSettingsModel->save(false)) {
+                            var_dump($userSettingsModel->getErrors());
+                            die();
+                        }
+
+                    }
+                }
+                catch (\Exception $e) {
+                    $transaction->rollBack();
+                    throw $e;
+                }
+
+
+                $transaction->commit();
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+            else{
+                Yii::$app->session->setFlash('error', 'Something went wrong while creating user.' );
+                return $this->render('update', [
+                    'model' => $model,
+                    'userProfileModel' => $userProfileModel,
+                    'userSettingsModel' => $userSettingsModel,
+                ]);
+            }
+
         }
 
         return $this->render('update', [
             'model' => $model,
+            'userProfileModel' => $userProfileModel,
+            'userSettingsModel' => $userSettingsModel,
         ]);
     }
 
@@ -197,5 +248,6 @@ class UsersController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+
     }
 }

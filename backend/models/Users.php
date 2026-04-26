@@ -41,7 +41,6 @@ class Users extends \yii\db\ActiveRecord
         return [
             [['created_at', 'updated_at', 'hash_password', 'auth_key'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 0],
-            [['hash_password'], 'required'],
             [['name', 'email'], 'required'],
             [['status'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
@@ -57,7 +56,7 @@ class Users extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Name'),
+            'name' => Yii::t('app', 'Username'),
             'email' => Yii::t('app', 'Email'),
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -85,7 +84,14 @@ class Users extends \yii\db\ActiveRecord
     }
 
     public function setPassword($password){
+//        var_dump($password);
+//        die();
         return $this->hash_password = Yii::$app->security->generatePasswordHash($password);
+    }
+    public function validatePassword($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->hash_password);
+
     }
 
     public function generateAuthKey(){
