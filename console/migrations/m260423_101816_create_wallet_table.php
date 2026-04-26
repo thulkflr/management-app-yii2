@@ -22,7 +22,7 @@ class m260423_101816_create_wallet_table extends Migration
             'fk-wallet-user_id',
             'wallet',
             'user_id',
-            'user',
+            'users',
             'id',
             'CASCADE'
         );

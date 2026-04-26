@@ -27,7 +27,7 @@ class m260423_102902_create_ideas_table extends Migration
             'fk-ideas-owner',
             '{{%ideas}}',
             'user_id',
-            '{{%user}}',
+            '{{%users}}',
             'id',
             'cascade'
         );

@@ -27,7 +27,7 @@ class m260423_102409_create_transactions_table extends Migration
             'fk-transactions-user_id',
             'transactions',
             'user_id',
-            'user',
+            'users',
             'id',
             'cascade'
         );
