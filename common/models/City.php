@@ -1,8 +1,8 @@
 <?php
 
-namespace app\models;
-
+namespace common\models;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "city".
@@ -50,4 +50,14 @@ class City extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function getCityMapArray($country_id): array
+    {
+        $citiesList = City::find()->where(['country_id'=>$country_id])->all();
+        return ArrayHelper::map($citiesList, 'id', 'name');
+    }
+
+    public static function getCityList2($country_id): array{
+        $citiesList = City::find()->where(['country_id'=>$country_id])->all();
+        return  $citiesList;
+    }
 }

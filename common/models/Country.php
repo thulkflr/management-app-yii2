@@ -1,8 +1,8 @@
 <?php
 
-namespace app\models;
-
+namespace common\models;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "country".
@@ -56,5 +56,12 @@ class Country extends \yii\db\ActiveRecord
             'order' => Yii::t('app', 'Order'),
         ];
     }
+    public static function getCountryList(): array
+    {
+        $dropList = Country::find()->select(['id', 'name','order'])->distinct()->orderBy(['order'=>SORT_ASC])->indexBy('name')->all();
+            return ArrayHelper::map($dropList, 'id', 'name');
+    }
 
 }
+
+

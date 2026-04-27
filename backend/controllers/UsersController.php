@@ -127,6 +127,10 @@ class UsersController extends Controller
 
                 }
             }else{
+                var_dump($model->getErrors());
+                var_dump($userProfileModel->getErrors());
+                var_dump($userSettingsModel->getErrors());
+                die();
                 Yii::$app->session->setFlash('error', 'Something went wrong while creating user.' );
                 return $this->render('create', [
                     'model' => $model,

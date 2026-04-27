@@ -34,7 +34,7 @@ class UserSettings extends \yii\db\ActiveRecord
     {
         return [
             [['enable_notification'], 'default', 'value' => 0],
-            [['user_id', 'language'], 'required'],
+            [['language'], 'default', 'value' => 'ar'],
             [['user_id', 'dark_mode', 'enable_notification'], 'integer'],
             [['language'], 'string', 'max' => 255],
             [['user_id'], 'unique'],
