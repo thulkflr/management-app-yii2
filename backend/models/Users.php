@@ -1,6 +1,9 @@
 <?php
 
 namespace app\models;
+use yii\helpers\Url;
+use yii\web\UploadedFile;
+
 
 use Yii;
 
@@ -22,6 +25,8 @@ class Users extends \yii\db\ActiveRecord
 {
 
     public $password;
+    public $eventImage;
+
 
 
 
@@ -41,6 +46,7 @@ class Users extends \yii\db\ActiveRecord
         return [
             [['created_at', 'updated_at', 'hash_password', 'auth_key'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 0],
+            [['eventImage'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg'],
             [['name', 'email'], 'required'],
             [['status'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
@@ -100,6 +106,18 @@ class Users extends \yii\db\ActiveRecord
     public function getAuthKey(){
         return $this->auth_key;
     }
+    public function upload() {
 
+        if (true) {
+            $path = $this->uploadPath() . $this->id . "." . $this->eventImage->extension;
+            $this->eventImage->saveAs($path);
+            $this->image = $this->id . "." . $this->eventImage->extension;
+            return $this->save();
+        }
+    }
+
+    public function uploadPath() {
+        return Url::to('@web/uploads/events');
+    }
 
 }

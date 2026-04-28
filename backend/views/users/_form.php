@@ -22,7 +22,7 @@ $select2Options = [
 
 <div class="users-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
     <?= $form->field($userProfileModel, 'first_name')->textInput(['maxlength' => true]) ?>
@@ -42,7 +42,8 @@ $select2Options = [
     ])->label('City') ;?>
     <?= $form->field($model, 'hash_password')->passwordInput(['maxlength' => true]) ?>
     <?= $form->field($userProfileModel, 'phone')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($userProfileModel, 'avatar')->textInput(['maxlength' => true]) ?>
+<!--    --><?php //= $form->field($userProfileModel, 'avatar')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($userProfileModel, 'avatar')->fileInput() ?>
     <?= $form->field($userProfileModel, 'bio')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">

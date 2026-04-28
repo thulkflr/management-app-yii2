@@ -7,11 +7,13 @@ use app\models\UserProfile;
 use app\models\Users;
 use app\models\UserSettings;
 use backend\models\UsersSearch;
+use common\models\UploadForm;
 use Yii;
 use yii\db\Exception;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * UsersController implements the CRUD actions for Users model.
@@ -127,10 +129,10 @@ class UsersController extends Controller
 
                 }
             }else{
-                var_dump($model->getErrors());
-                var_dump($userProfileModel->getErrors());
-                var_dump($userSettingsModel->getErrors());
-                die();
+//                var_dump($model->getErrors());
+//                var_dump($userProfileModel->getErrors());
+//                var_dump($userSettingsModel->getErrors());
+//                die();
                 Yii::$app->session->setFlash('error', 'Something went wrong while creating user.' );
                 return $this->render('create', [
                     'model' => $model,
@@ -238,6 +240,20 @@ class UsersController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionUpload($id)
+    {
+        $model = $this->findModel($id);
+        if (Yii::$app->request->isPost) {
+            $model->eventImage = UploadedFile::getInstance($model, 'eventImage');
+            if ($model->upload()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+
+            }
+        }
+
+        return $this->render('upload', ['model' => $model]);
+    }
+
     /**
      * Finds the Users model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -245,6 +261,7 @@ class UsersController extends Controller
      * @return Users the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
+
     protected function findModel($id)
     {
         if (($model = Users::findOne(['id' => $id])) !== null) {
