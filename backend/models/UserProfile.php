@@ -38,6 +38,7 @@ class UserProfile extends \yii\db\ActiveRecord
     {
         return [
             [['first_name', 'last_name', 'phone', 'city_id', 'country_id', 'avatar', 'bio'], 'required'],
+            [['avatar'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
             [['user_id', 'city_id', 'country_id'], 'integer'],
             [['bio'], 'string'],
             [['first_name', 'last_name', 'phone', 'avatar'], 'string', 'max' => 255],

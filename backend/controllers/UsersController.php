@@ -37,7 +37,11 @@ class UsersController extends Controller
             ]
         );
     }
-
+    public function beforeAction($action)
+    {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
+    }
     /**
      * Lists all Users models.
      *
@@ -79,11 +83,18 @@ class UsersController extends Controller
         $userProfileModel = new UserProfile();
         $userSettingsModel = new UserSettings();
 
-
         if ($this->request->isPost) {
             $model->load($this->request->post());
             $userProfileModel->load($this->request->post());
             $userSettingsModel->load($this->request->post());
+            $imageUploaded = UploadedFile::getInstance($userProfileModel, 'avatar');
+
+            if (($imageUploaded)!=null){
+                $imageName = 'avatar_' . time() . '.' . $imageUploaded->extension;
+                $imageUploaded->saveAs(Yii::getAlias('@uploadPath') . $imageName);
+                $userProfileModel->avatar = $imageName;
+            }
+
             $valid= $model->validate();
             $valid= $userProfileModel->validate() && $valid;
             $valid= $userSettingsModel->validate() && $valid;

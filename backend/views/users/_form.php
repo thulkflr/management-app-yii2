@@ -22,7 +22,8 @@ $select2Options = [
 
 <div class="users-form">
 
-    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data',
+    ]]); ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
     <?= $form->field($userProfileModel, 'first_name')->textInput(['maxlength' => true]) ?>
@@ -42,9 +43,9 @@ $select2Options = [
     ])->label('City') ;?>
     <?= $form->field($model, 'hash_password')->passwordInput(['maxlength' => true]) ?>
     <?= $form->field($userProfileModel, 'phone')->textInput(['maxlength' => true]) ?>
-<!--    --><?php //= $form->field($userProfileModel, 'avatar')->textInput(['maxlength' => true]) ?>
     <?= $form->field($userProfileModel, 'avatar')->fileInput() ?>
     <?= $form->field($userProfileModel, 'bio')->textInput(['maxlength' => true]) ?>
+
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
@@ -54,21 +55,21 @@ $select2Options = [
 
 </div>
 <script>
-        function fillCityFiled(client) {
-            var client_id = client.val();
-            var targetSelect = client.attr('id').replace('country_id', 'city_id');
-            var url = '<?= Url::to(['/dropdown/get-city-array', 'country' => '-id-']) ?>';
-            var $select = $('#' + targetSelect);
-            $select.find('option').remove().end();
-            $.ajax({
-                url: url.replace('-id-', client_id),
-                success: function (data) {
-                    var select2Options = <?= \yii\helpers\Json::encode($select2Options + ['placeholder' => Yii::t('app', 'Please Select City ...')]) ?>;
-                    select2Options.data = data.data;
-                    $select.select2(select2Options);
-                    $select.val(data.selected).trigger('change');
-                }
-            });
-        }
+    function fillCityFiled(client) {
+        var client_id = client.val();
+        var targetSelect = client.attr('id').replace('country_id', 'city_id');
+        var url = '<?= Url::to(['/dropdown/get-city-array', 'country' => '-id-']) ?>';
+        var $select = $('#' + targetSelect);
+        $select.find('option').remove().end();
+        $.ajax({
+            url: url.replace('-id-', client_id),
+            success: function (data) {
+                var select2Options = <?= \yii\helpers\Json::encode($select2Options + ['placeholder' => Yii::t('app', 'Please Select City ...')]) ?>;
+                select2Options.data = data.data;
+                $select.select2(select2Options);
+                $select.val(data.selected).trigger('change');
+            }
+        });
+    }
 
 </script>
