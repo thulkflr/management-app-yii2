@@ -80,6 +80,7 @@ class UsersController extends Controller
     public function actionCreate()
     {
         $model = new Users();
+        $model->scenario=Users::CREATE_USER_SCENARIO;
         $userProfileModel = new UserProfile();
         $userSettingsModel = new UserSettings();
 
@@ -106,8 +107,6 @@ class UsersController extends Controller
                     }
                     $model->generateAuthKey();
                     $model->status = 1;
-                    $model->created_at = date('Y-m-d H:i:s');
-                    $model->updated_at = date('Y-m-d H:i:s');
                     if (!$model->save(false)) {
                         var_dump($model->getErrors());
                         die();                    }
@@ -172,6 +171,8 @@ class UsersController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->scenario=Users::UPDATE_USER_SCENARIO;
+
         if (isset($model))
         {
             $userProfileModel = $model->userProfile ?? new UserProfile();

@@ -1,6 +1,8 @@
 <?php
 
 namespace app\models;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 use yii\helpers\Url;
 use yii\web\UploadedFile;
 
@@ -27,7 +29,8 @@ class Users extends \yii\db\ActiveRecord
     public $password;
     public $eventImage;
 
-
+const CREATE_USER_SCENARIO = 'create_user_scenario';
+const UPDATE_USER_SCENARIO = 'update_user_scenario';
 
 
     /**
@@ -37,6 +40,7 @@ class Users extends \yii\db\ActiveRecord
     {
         return 'users';
     }
+
 
     /**
      * {@inheritdoc}
@@ -54,7 +58,27 @@ class Users extends \yii\db\ActiveRecord
             [['email'], 'unique'],
         ];
     }
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::CREATE_USER_SCENARIO] = ['name', 'email', 'hash_password'];
+        $scenarios[self::UPDATE_USER_SCENARIO] = ['name', 'email'];
 
+        return $scenarios;
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => date('Y-m-d H:i:s'),
+            ]
+        ];
+
+    }
     /**
      * {@inheritdoc}
      */
